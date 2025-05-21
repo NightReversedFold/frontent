@@ -161,7 +161,7 @@ export default () => {
             onClick={async ()=>{
 
               try {
-                const res = await axios.put("http://127.0.0.1:8000/",{
+                const res = await axios.post("http://127.0.0.1:8000/",{
                 classes: selectedList,
                 queryFORAI: queryFORAI.current?.value,
                 inclusivo:incluyeTodos
