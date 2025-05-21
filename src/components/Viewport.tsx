@@ -14,7 +14,7 @@ const Box = (
     <div
       ref={ref}
       key={key}
-      className={`size-45 border-2 transition-all duration-700 transform ${
+      className={`size-45 transition-all duration-700 transform ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       }`}
     ><img src= {image} className="size-full" alt="" />
