@@ -4,9 +4,11 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
+
 import axios from "axios";
 
-import {useRef, useState } from "react";
+import { useRef, useState } from "react";
+import Viewport from "./Viewport"
 
 const items = [
   "aeroplane",
@@ -22,20 +24,23 @@ const items = [
   "diningtable",
 ] as const;
 
+import type {image} from "../types/image"
+
 type Item = (typeof items)[number];
 
 export default () => {
-  
   const [incluyeTodos, setIncluyeTodos] = useState(true);
   const [selectedList, setSelectedList] = useState<Item[]>([]);
-  const queryFORAI = useRef<HTMLTextAreaElement>(null)
+  const queryFORAI = useRef<HTMLTextAreaElement>(null);
+
+  const [arrayOfImages,setArrayOfImages] = useState<image[] | null>(null)
 
   const toggleIncluyeTodos = () => {
     setIncluyeTodos(!incluyeTodos);
   };
 
   return (
-    <div className="w-200 mx-10">
+    <div className="w-200 mx-10 h-auto">
       <h2 className="text-6xl font-bold">búsqueda</h2>
 
       <div className=" flex flex-col bg-[#1a1818] rounded-3xl p-5 box-content gap-y-5 border-1 border-[#ffffff4f] mt-5">
@@ -44,7 +49,7 @@ export default () => {
 
           <div className="rounded-2xl h-30 bg-[#3d3939] w-full">
             <textarea
-              ref = {queryFORAI}
+              ref={queryFORAI}
               className="rounded-2xl p-2 resize-none size-full"
               name=""
               id=""
@@ -52,7 +57,7 @@ export default () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-y-3 "  >
+        <div className="flex flex-col gap-y-3 ">
           <h3>Clase</h3>
           <Listbox
             onChange={(e: Item) => {
@@ -69,13 +74,16 @@ export default () => {
             >
               {selectedList.length <= 0 ? `Selecciona una clase` : ""}
               <div className="flex flex-wrap gap-x-3 gap-y-2">
-                {selectedList.map((item,indx) => (
-                  <div key={indx} className=" px-2 bg-red-400 rounded-[5px] h-full min-x-25 text-white">
+                {selectedList.map((item, indx) => (
+                  <div
+                    key={indx}
+                    className=" px-2 bg-red-400 rounded-[5px] h-full min-x-25 text-white"
+                  >
                     {item}
 
                     <span className="ml-1">
                       <button
-                        onClick={(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+                        onClick={() => {
                           setSelectedList((current) =>
                             current.filter((arItem) => arItem !== item)
                           );
@@ -89,15 +97,12 @@ export default () => {
                 ))}
               </div>
 
-              <div className="ml-auto mr-1 gap-x-2 flex " >
+              <div className="ml-auto mr-1 gap-x-2 flex ">
                 <button
-
                   type="button"
-                  onClick={
-                    () => {
-                      setSelectedList([])
-                    }
-                  }   
+                  onClick={() => {
+                    setSelectedList([]);
+                  }}
                   className="
                   flex items-center justify-center
                   hover:text-gray-400 cursor-pointer
@@ -107,7 +112,6 @@ export default () => {
                   <span className="text-base">X</span>
                 </button>
                 <ListboxButton
-         
                   type="button"
                   className=" flex items-center justify-center
                   hover:text-gray-400 cursor-pointer
@@ -121,7 +125,6 @@ export default () => {
 
             <ListboxOptions
               anchor="top"
-            
               className="min-w-20 rounded-2xl bg-[#1f1f1f] h-90 scrollbar-hide"
             >
               {items.map((item, indx) => (
@@ -158,29 +161,28 @@ export default () => {
         <div className="w-full">
           <button
             type="submit"
-            onClick={async ()=>{
 
+            onClick={async () => {
               try {
-                const res = await axios.post("http://127.0.0.1:8000/query",{
-                classes: selectedList,
-                queryFORAI: queryFORAI.current?.value,
-                inclusivo:incluyeTodos
+                const res = await axios.post("http://127.0.0.1:8000/query", {
+                  classes: selectedList,
+                  queryFORAI: queryFORAI.current?.value,
+                  inclusivo: incluyeTodos,
+                });
 
-              })
+                setArrayOfImages(res.data.results)
 
-              console.log(res)
-
-              } catch{
-
-              }
-             
-            
+                console.log(res);
+              } catch {}
             }}
             className="border-[#ffffff4f] border-1 p-2 rounded-2xl cursor-pointer"
           >
             Submit
           </button>
         </div>
+
+        {arrayOfImages?<Viewport arrayImages = {arrayOfImages}/>:null}
+
       </div>
     </div>
   );
