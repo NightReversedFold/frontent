@@ -1,13 +1,20 @@
 import useInView from "./Observer";
-import type {image} from "../types/image"
+import type { image } from "../types/image";
 
-const Box = (
-  {key,image}:{
-    image:string
-    key:number
-  }
+import { memo, useState } from "react";
 
-) => {
+import ImageVisualizer from "./ImageVisualizer";
+import {backendUrl} from '.././env'
+
+const Box = ({
+  key,
+  image,
+  setSelected,
+}: {
+  image: string;
+  key: number;
+  setSelected: React.Dispatch<React.SetStateAction<string | null>>;
+}) => {
   const { ref, isVisible } = useInView();
 
   return (
@@ -17,21 +24,36 @@ const Box = (
       className={`size-45 transition-all duration-700 transform ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       }`}
-    ><img src= {image} className="size-full" alt="" />
-
+      onClick={() => {
+        setSelected(image);
+      }}
+    >
+      <img src={image} className="cursor-pointer size-full" alt="" />
     </div>
   );
 };
 
-export default ({arrayImages}:{
-  arrayImages:image[] | null
-}) => {
+export default memo(({ arrayImages }: { arrayImages: image[] | null }) => {
+  const [selectedImage, setSelected] = useState<string | null>(null);
+
   return (
-    <div className="mt-20 grid grid-cols-4 gap-y-2 justify-items-center box-content w-full">
-      {arrayImages?.map(({image_filename},indx:number) => {
-        return <Box key= {indx} image = {`http://127.0.0.1:8000/images/${image_filename}`}/>
-        
-      })}
+    <div>
+      <ImageVisualizer
+        selectedImage={selectedImage}
+        setSelected={setSelected}
+      />
+
+      <div className="inline-grid mt-20 grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-4 justify-items-center box-content w-full">
+        {arrayImages?.map(({ image_filename }, indx: number) => {
+          return (
+            <Box
+              setSelected={setSelected}
+              key={indx}
+              image={`${backendUrl}/images/${image_filename}`}
+            />
+          );
+        })}
+      </div>
     </div>
   );
-};
+});
