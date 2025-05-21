@@ -4,8 +4,9 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
+import axios from "axios";
 
-import {useState } from "react";
+import {useRef, useState } from "react";
 
 const items = [
   "aeroplane",
@@ -27,6 +28,7 @@ export default () => {
   
   const [incluyeTodos, setIncluyeTodos] = useState(true);
   const [selectedList, setSelectedList] = useState<Item[]>([]);
+  const queryFORAI = useRef<HTMLTextAreaElement>(null)
 
   const toggleIncluyeTodos = () => {
     setIncluyeTodos(!incluyeTodos);
@@ -42,6 +44,7 @@ export default () => {
 
           <div className="rounded-2xl h-30 bg-[#3d3939] w-full">
             <textarea
+              ref = {queryFORAI}
               className="rounded-2xl p-2 resize-none size-full"
               name=""
               id=""
@@ -155,6 +158,24 @@ export default () => {
         <div className="w-full">
           <button
             type="submit"
+            onClick={async ()=>{
+
+              try {
+                const res = await axios.put("http://127.0.0.1:8000/",{
+                classes: selectedList,
+                queryFORAI: queryFORAI.current?.value,
+                inclusivo:incluyeTodos
+
+              })
+
+              console.log(res)
+
+              } catch{
+
+              }
+             
+            
+            }}
             className="border-[#ffffff4f] border-1 p-2 rounded-2xl cursor-pointer"
           >
             Submit
