@@ -77,14 +77,14 @@ export default () => {
           },
         }
       );
-      const bb = await res.blob()
-
+  
       setsbStatus("Resolved");
 
-      setBackendVideo(bb);
+      setBackendVideo(URL.createObjectURL(res.data));
 
       console.log(res);
-    } catch {
+    } catch(err) {
+      console.error(err)
       setsbStatus("Error");
     } finally {
       setSelectedVideo(null);
