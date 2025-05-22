@@ -47,7 +47,7 @@ export default memo(({ arrayImages }: { arrayImages: image[] | null }) => {
         setSelected={setSelected}
       />
 
-      <div className="inline-grid mt-20 grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-4 justify-items-center box-content w-full">
+      <div className="inline-grid mt-20 grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-4 gap-y-8 justify-items-center box-content w-full">
         {arrayImages?.map(({ image_filename, score }, indx: number) => {
           return (
             <Box
