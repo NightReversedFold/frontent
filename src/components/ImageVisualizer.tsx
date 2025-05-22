@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default ({
   selectedImage,
@@ -23,7 +23,7 @@ export default ({
         transition={{ duration: 0.3 }}
         exit={{ opacity: 0 }}
       >
-        <img className="size-full" src={selectedImage as string} alt="" />
+        <img className="size-full transition-transform duration-300 ease-in-out hover:scale-150" src={selectedImage as string} alt="" />
       </motion.div>
     </div>
   ) : null;
