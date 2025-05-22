@@ -79,7 +79,7 @@ export default () => {
 
       setsbStatus("Resolved");
 
-      setBackendVideo(res.data);
+      setBackendVideo(res);
 
       console.log(res);
     } catch {
