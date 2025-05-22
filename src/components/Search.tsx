@@ -71,15 +71,17 @@ export default () => {
         `${backendUrl}/video`,
         formDt,
         {
+          responseType: "blob",
           headers: {
             "Content-Type": "multipart/form-data",
           },
         }
       );
+      const bb = await res.blob()
 
       setsbStatus("Resolved");
 
-      setBackendVideo(res);
+      setBackendVideo(bb);
 
       console.log(res);
     } catch {
