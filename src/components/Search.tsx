@@ -59,7 +59,14 @@ export default () => {
     try {
       const formDt = new FormData();
       formDt.append("file", selectedVideo as File);
+      formDt.append("classes", JSON.stringify(selectedList));
 
+      if (queryFORAI.current){
+        formDt.append("queryFORAI", queryFORAI.current?.value.toString());
+      }
+
+      formDt.append("inclusivo", incluyeTodos.toString());
+      
       const res = await axios.post(
         `${backendUrl}/video`,
         formDt,
