@@ -87,7 +87,7 @@ export default () => {
       console.error(err)
       setsbStatus("Error");
     } finally {
-      setSelectedVideo(null);
+      
     }
   };
 

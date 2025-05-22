@@ -6,8 +6,7 @@ export default ({response}:{response:string}) => {
   return (
     <div>
       {
-        <video controls width={600}>
-          <source src={response} type="video/mp4" />
+        <video controls width={600} src={response}>
         </video>
       }
     </div>
