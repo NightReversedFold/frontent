@@ -72,13 +72,13 @@ export default () => {
         formDt,
         {
           responseType: "blob",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        
         }
       );
   
       setsbStatus("Resolved");
+      
+      console.log(res.data)
 
       setBackendVideo(URL.createObjectURL(res.data));
 
