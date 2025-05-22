@@ -7,7 +7,7 @@ import {
 
 import axios from "axios";
 
-import {useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Viewport from "./Viewport";
 
 const items = [
@@ -57,13 +57,18 @@ export default () => {
 
   const handleSubmitForBackendVideo = async () => {
     try {
-      const formDt = new FormData()
-      formDt.append('videos',selectedVideo as File)
+      const formDt = new FormData();
+      formDt.append("file", selectedVideo as File);
 
-      const res = await axios.post(`${backendUrl}/video`, {
-        file: formDt
-      });
-
+      const res = await axios.post(
+        `${backendUrl}/video`,
+        FormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       setsbStatus("Resolved");
 
@@ -72,8 +77,8 @@ export default () => {
       console.log(res);
     } catch {
       setsbStatus("Error");
-    } finally{
-      setSelectedVideo(null)
+    } finally {
+      setSelectedVideo(null);
     }
   };
 
@@ -98,7 +103,6 @@ export default () => {
   const toggleIncluyeTodos = () => {
     setIncluyeTodos(!incluyeTodos);
   };
-
 
   return (
     <div className="w-full md:max-h-200 mx-10 h-auto">
@@ -229,11 +233,11 @@ export default () => {
                   setsbStatus("Posted");
 
                   if (selectedVideo) {
-                    handleSubmitForBackendVideo()
+                    handleSubmitForBackendVideo();
                     return;
                   }
 
-                  handleSubmitForImageCollection()
+                  handleSubmitForImageCollection();
                 }}
                 className="border-[#ffffff4f] border-1 p-2 rounded-2xl cursor-pointer mt-5"
               >
