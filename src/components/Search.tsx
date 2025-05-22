@@ -57,8 +57,10 @@ export default () => {
 
   const handleSubmitForBackendVideo = async () => {
     try {
+      const formDt = new FormData()
+
       const res = await axios.post(`${backendUrl}/video`, {
-        file: selectedVideo,
+        file: formDt.append('videos',selectedVideo as File),
       });
 
 
