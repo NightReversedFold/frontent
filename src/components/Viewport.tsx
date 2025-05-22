@@ -10,9 +10,11 @@ import {backendUrl} from '.././env'
 const Box = ({
   key,
   image,
+  score,
   setSelected,
 }: {
   image: string;
+  score:number
   key: number;
   setSelected: React.Dispatch<React.SetStateAction<string | null>>;
 }) => {
@@ -30,6 +32,7 @@ const Box = ({
       }}
     >
       <img src={image} className="cursor-pointer size-full" alt="" />
+      <p>{score}</p>
     </div>
   );
 };
@@ -45,11 +48,12 @@ export default memo(({ arrayImages }: { arrayImages: image[] | null }) => {
       />
 
       <div className="inline-grid mt-20 grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-4 justify-items-center box-content w-full">
-        {arrayImages?.map(({ image_filename }, indx: number) => {
+        {arrayImages?.map(({ image_filename, score }, indx: number) => {
           return (
             <Box
               setSelected={setSelected}
               key={indx}
+              score = {score}
               image={`${backendUrl}/images/${image_filename}`}
             />
           );
