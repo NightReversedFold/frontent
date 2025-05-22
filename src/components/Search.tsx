@@ -7,8 +7,7 @@ import {
 
 import axios from "axios";
 
-
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Viewport from "./Viewport";
 
 const items = [
@@ -34,26 +33,70 @@ const items = [
   "tvmonitor",
 ] as const;
 
-type submitStatus = "Posted" | "Resolved" | 'Error';
+type submitStatus = "Posted" | "Resolved" | "Error";
 
 import type { image } from "../types/image";
+import VideoViewport from "./VideoViewport";
 
-import { backendUrl } from '../env';
+import { backendUrl } from "../env";
 
 type Item = (typeof items)[number];
 
 export default () => {
+  const queryFORAI = useRef<HTMLTextAreaElement>(null);
+
   const [incluyeTodos, setIncluyeTodos] = useState(true);
   const [selectedList, setSelectedList] = useState<Item[]>([]);
-  const queryFORAI = useRef<HTMLTextAreaElement>(null);
 
   const [arrayOfImages, setArrayOfImages] = useState<image[] | null>(null);
 
   const [sbStatus, setsbStatus] = useState<submitStatus>("Resolved");
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+
+  const [backendVideo, setBackendVideo] = useState<File | null | any>(null);
+
+  const handleSubmitForBackendVideo = async () => {
+    try {
+      const res = await axios.post(`${backendUrl}/video`, {
+        file: selectedVideo,
+      });
+
+
+      setsbStatus("Resolved");
+
+      setBackendVideo(res.data);
+
+      console.log(res);
+    } catch {
+      setsbStatus("Error");
+    } finally{
+      setSelectedVideo(null)
+    }
+  };
+
+  const handleSubmitForImageCollection = async () => {
+    try {
+      const res = await axios.post(`${backendUrl}/query`, {
+        classes: selectedList,
+        queryFORAI: queryFORAI.current?.value,
+        inclusivo: incluyeTodos,
+      });
+
+      setsbStatus("Resolved");
+
+      setArrayOfImages(res.data.results);
+
+      console.log(res);
+    } catch {
+      setsbStatus("Error");
+    }
+  };
 
   const toggleIncluyeTodos = () => {
     setIncluyeTodos(!incluyeTodos);
   };
+
+
 
   return (
     <div className="w-full md:max-h-200 mx-10 h-auto">
@@ -174,35 +217,59 @@ export default () => {
           <span className="text-sm font-semibold">Incluye todos</span>
         </div>
 
-        <div className="w-full">
-          {(sbStatus === "Resolved" || sbStatus === 'Error') && (
-            <button
-              type="submit"
-              onClick={async () => {
-                try {
+        <div className="w-full ">
+          {(sbStatus === "Resolved" || sbStatus === "Error") && (
+            <div className="flex gap-5">
+              <button
+                type="submit"
+                onClick={async () => {
                   setArrayOfImages(null);
                   setsbStatus("Posted");
 
-                  const res = await axios.post(`${backendUrl}/query`, {
-                    classes: selectedList,
-                    queryFORAI: queryFORAI.current?.value,
-                    inclusivo: incluyeTodos,
-                  });
+                  if (selectedVideo) {
+                    handleSubmitForBackendVideo()
+                    return;
+                  }
 
-                  setsbStatus("Resolved");
+                  handleSubmitForImageCollection()
+                }}
+                className="border-[#ffffff4f] border-1 p-2 rounded-2xl cursor-pointer mt-5"
+              >
+                Submit
+              </button>
 
-                  setArrayOfImages(res.data.results);
+              <form className="mt-5 py-2 items-center flex  bg-slate-800 opacity-80 px-3 rounded-2xl">
+                <div className="flex flex-row items-center">
+                  <input
+                    accept="video/*"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
 
-                  console.log(res);
-                } catch {
-                  setsbStatus('Error');
-
-                }
-              }}
-              className="border-[#ffffff4f] border-1 p-2 rounded-2xl cursor-pointer mt-5"
-            >
-              Submit
-            </button>
+                      setSelectedVideo(file);
+                    }}
+                    type="file"
+                    id="custom-input"
+                    hidden
+                  />
+                  <label
+                    htmlFor="custom-input"
+                    className="block  text-slate-500 mr-4 py-2 px-4
+                              rounded-md border-0 text-sm font-semibold bg-slate-500
+                              text-white
+                               hover:bg-slate-400 cursor-pointer"
+                  >
+                    Choose video
+                  </label>
+                  <label
+                    htmlFor="custom-input"
+                    className="text-sm  opacity-85 bg-gray-600 text-white p-1 box-content rounded-[10px]"
+                  >
+                    {selectedVideo ? selectedVideo.name : "selected video"}
+                  </label>
+                </div>
+              </form>
+            </div>
           )}
           {sbStatus === "Posted" && (
             <svg
@@ -245,10 +312,12 @@ export default () => {
           )}
         </div>
 
-        {arrayOfImages ? <Viewport arrayImages={arrayOfImages} /> : null}
-        {sbStatus === "Error" && <p className="text-2xl">
-          Something went wrong; please, try again. 
-        </p>}
+        {arrayOfImages && <Viewport arrayImages={arrayOfImages} />}
+        {backendVideo && <VideoViewport response={backendVideo} />}
+
+        {sbStatus === "Error" && (
+          <p className="text-2xl">Something went wrong; please, try again.</p>
+        )}
       </div>
     </div>
   );
