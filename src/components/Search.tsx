@@ -7,7 +7,7 @@ import {
 
 import axios from "axios";
 
-import { useEffect, useRef, useState } from "react";
+import {useRef, useState } from "react";
 import Viewport from "./Viewport";
 
 const items = [
@@ -95,7 +95,6 @@ export default () => {
   const toggleIncluyeTodos = () => {
     setIncluyeTodos(!incluyeTodos);
   };
-
 
 
   return (
