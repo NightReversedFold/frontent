@@ -1,4 +1,3 @@
-import { video } from "framer-motion/m";
 
 export default ({response}:{response:string}) => {
   console.log(response);
