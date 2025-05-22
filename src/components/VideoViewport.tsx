@@ -1,13 +1,9 @@
-
-export default ({response}:{response:string}) => {
+export default ({ response }: { response: string }) => {
   console.log(response);
 
   return (
     <div>
-      {
-        <video controls width={600} src={response}>
-        </video>
-      }
+      <video key={response} controls width={600} src={response}>AAAAAAA</video>
     </div>
   );
 };
