@@ -239,6 +239,8 @@ export default () => {
                 type="submit"
                 onClick={async () => {
                   setArrayOfImages(null);
+                  setBackendVideo(null)
+                  
                   setsbStatus("Posted");
 
                   if (selectedVideo) {
