@@ -62,7 +62,7 @@ export default () => {
 
       const res = await axios.post(
         `${backendUrl}/video`,
-        FormData,
+        formDt,
         {
           headers: {
             "Content-Type": "multipart/form-data",
