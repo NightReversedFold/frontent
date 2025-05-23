@@ -6,7 +6,6 @@ import { memo, useState } from "react";
 import ImageVisualizer from "./ImageVisualizer";
 import {backendUrl} from '.././env'
 
-
 const Box = ({
   key,
   image,

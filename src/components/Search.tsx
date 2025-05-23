@@ -33,6 +33,8 @@ const items = [
   "tvmonitor",
 ] as const;
 
+const videoPrueba = '/test.mp4'
+
 type submitStatus = "Posted" | "Resolved" | "Error";
 
 import type { image } from "../types/image";
@@ -53,7 +55,7 @@ export default () => {
   const [sbStatus, setsbStatus] = useState<submitStatus>("Resolved");
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
 
-  const [backendVideo, setBackendVideo] = useState<File | null | any>(null);
+  const [backendVideo, setBackendVideo] = useState<string | null>(videoPrueba);
 
   const handleSubmitForBackendVideo = async () => {
     try {
@@ -114,7 +116,7 @@ export default () => {
   };
 
   return (
-    <div className="w-full md:max-h-200 mx-10 h-auto">
+    <div className="w-full md:max-h-200 mx-10  h-auto">
       <h2 className="text-6xl font-bold">búsqueda</h2>
 
       <div className=" flex flex-col bg-[#1a1818] rounded-3xl p-5 box-content gap-y-5 border-1 border-[#ffffff4f] mt-5">
@@ -271,9 +273,9 @@ export default () => {
                   />
                   <label
                     htmlFor="custom-input"
-                    className="block  text-slate-500 mr-4 py-2 px-4
+                    className="block  mr-4 py-2 px-4
                               rounded-md border-0 text-sm font-semibold bg-slate-500
-                              text-white
+                       
                                hover:bg-slate-400 cursor-pointer"
                   >
                     Choose video
