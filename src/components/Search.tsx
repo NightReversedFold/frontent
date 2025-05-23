@@ -33,7 +33,6 @@ const items = [
   "tvmonitor",
 ] as const;
 
-const videoPrueba = '/test.mp4'
 
 type submitStatus = "Posted" | "Resolved" | "Error";
 
@@ -55,7 +54,7 @@ export default () => {
   const [sbStatus, setsbStatus] = useState<submitStatus>("Resolved");
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
 
-  const [backendVideo, setBackendVideo] = useState<string | null>(videoPrueba);
+  const [backendVideo, setBackendVideo] = useState<string | null>(null);
 
   const handleSubmitForBackendVideo = async () => {
     try {
@@ -117,7 +116,7 @@ export default () => {
 
   return (
     <div className="w-full md:max-h-200 mx-10  h-auto">
-      <h2 className="text-6xl font-bold">búsqueda</h2>
+      <h2 className="text-6xl font-bold">Análisis Forense</h2>
 
       <div className=" flex flex-col bg-[#1a1818] rounded-3xl p-5 box-content gap-y-5 border-1 border-[#ffffff4f] mt-5">
         <div className="flex flex-col gap-y-3">
