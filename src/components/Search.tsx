@@ -33,6 +33,7 @@ const items = [
   "tvmonitor",
 ] as const;
 
+const testVideo = '/test.mp4'
 
 type submitStatus = "Posted" | "Resolved" | "Error";
 
@@ -55,6 +56,7 @@ export default () => {
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
 
   const [backendVideo, setBackendVideo] = useState<string | null>(null);
+
 
   const handleSubmitForBackendVideo = async () => {
     try {

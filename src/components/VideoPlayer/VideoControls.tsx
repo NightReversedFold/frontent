@@ -3,6 +3,9 @@ import { FaPlay } from "react-icons/fa";
 import { MdOutlineFullscreen } from "react-icons/md";
 import { useState, memo } from "react";
 import { FaPause } from "react-icons/fa";
+import { FaCircle } from "react-icons/fa6";
+
+import arr from "../../temporal";
 
 export default memo(
   ({
@@ -18,23 +21,24 @@ export default memo(
     const [fullScreen, setFullScreen] = useState(false);
     const [isHover, setIsHover] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
-    
 
     useEffect(() => {
+      getFormatedTimeStamps();
+
       const handleFullscreenChange = () => {
         const isFullscreen = document.fullscreenElement !== null;
 
         setIsFullScreen(isFullscreen);
         setFullScreen(isFullscreen);
       };
-      
+
       const handleTimeUpdate = () => {
-        setCurrentTime(video.current!.currentTime/video.current!.duration)
-      }
+        setCurrentTime(video.current!.currentTime / video.current!.duration);
+      };
 
       document.addEventListener("fullscreenchange", handleFullscreenChange);
-      video.current!.addEventListener('timeupdate',handleTimeUpdate)
-      
+      video.current!.addEventListener("timeupdate", handleTimeUpdate);
+
       playing ? video.current?.play() : video.current?.pause();
       fullScreen
         ? viewport.current!.requestFullscreen().then(() => {
@@ -58,7 +62,9 @@ export default memo(
 
     return (
       <div
-        className={` w-full h-full absolute bottom-0 left-0 flex flex-col   size-full transition duration-100 ${
+        className={` ${
+          video.current?.width
+        } h-full absolute bottom-0 left-0 flex flex-col   size-full transition duration-100 ${
           isHover ? " opacity-100" : "opacity-0"
         }`}
         onMouseEnter={() => {
@@ -99,30 +105,37 @@ export default memo(
           <div className="w-3/4 h-full flex justify-center items-center">
             <span>{formatTime(video.current?.currentTime || 0)}</span>
 
-            <div className="relative w-130 mx-2 h-2 z-10 flex items-center">
+            <div className="relative w-130 mx-4 h-2 z-10 flex items-center">
               <input
                 type="range"
                 min={0}
                 max={1}
-                value={currentTime}
-                step="0.001"
-                onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                    setIsPlaying(false);
+                value={currentTime || 0}
+                step="0.00001"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setIsPlaying(false);
 
-                    video.current!.currentTime = video.current!.duration * Number(e.target.value)
+                  video.current!.currentTime =
+                    video.current!.duration * Number(e.target.value);
 
-                    setCurrentTime(Number(e.target.value))
-                    console.log(Number(e.target.value),video.current!.duration * Number(e.target.value))
-
+                  setCurrentTime(Number(e.target.value));
+                  console.log(
+                    Number(e.target.value),
+                    video.current!.duration * Number(e.target.value)
+                  );
                 }}
                 className=" absolute w-full z-999 opacity-0 cursor-pointer"
               />
-
-              <div className="absolute w-full bg-gray-200 h-2 rounded">
+              <div className=" absolute w-full bg-gray-200 h-2 rounded">
+            
                 <div
-                  className="w-2/4 h-full bg-sky-500 rounded "
-                  style={{ width: `${currentTime*100}%` }}
-                ></div>
+                  className="w-2/4 h-full bg-sky-500 rounded relative flex items-center"
+                  style={{ width: `${currentTime * 100}%` }}
+                >
+                  <span>
+                    <FaCircle className="absolute -top-1 -right-1" />
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -145,5 +158,26 @@ export default memo(
 const formatTime = (seconds: number) => {
   const min = Math.floor(seconds / 60);
   const sec = Math.floor(seconds % 60);
-  return `${min}:${sec.toString().padStart(2, '0')}`;
+  return `${min}:${sec.toString().padStart(2, "0")}`;
+};
+
+const getFormatedTimeStamps = () => {
+  let r = 0;
+  let zx = {};
+
+  Object.values(arr.holabebe).forEach((element) => {
+    element.forEach((x) => {
+      r = r + 1;
+      if (!zx[x[2]]) {
+        zx[x[2]] = {
+          timeStamps: [],
+        };
+      }
+      zx[x[2]].timeStamps.push(x[0]);
+    });
+  });
+
+  console.log(zx);
+
+  return zx;
 };

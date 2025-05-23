@@ -5,6 +5,7 @@ import VideoControls from "./VideoPlayer/VideoControls";
 export default ({ response }: { response: string }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
+  
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -19,13 +20,13 @@ export default ({ response }: { response: string }) => {
   }, [response]);
 
   return (
-    <div ref={viewportRef} className=" w-full flex justify-center">
+    <div ref={viewportRef} className=" w-full flex justify-center h-full">
       <div
         className={`${
-          isFullScreen ? "absolute" : "relative"
-        } my-20 w-3/4 `}
+          isFullScreen ? "relative" : "relative"
+        } my-20 max-h-200 items-center ${isFullScreen?' ':'w-3/4 '}`}
       >
-        <video  ref={videoRef} className="w-full top-0 left-0" src={response}>
+        <video ref={videoRef}  className="object-cover w-full top-0 left-0 h-full" src={response}>
           Video is not compatible with the browser.
         </video>
 
