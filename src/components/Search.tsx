@@ -79,7 +79,7 @@ export default () => {
   
       setsbStatus("Resolved");
       
-      console.log(res.data)
+      console.log(res.data,res.headers)
 
       setBackendVideo(URL.createObjectURL(res.data));
 
